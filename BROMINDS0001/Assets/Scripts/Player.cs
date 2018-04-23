@@ -30,9 +30,16 @@ public class Player : MonoBehaviour {
 		//cam.transform.localEulerAngles = cam.transform.localEulerAngles + Vector3.up * mousePos.normalized.x * 0.05f;
 		float mouseX = Input.GetAxisRaw("Mouse X");
 
-
-		rigi.AddForce (cam.transform.forward.normalized * velForward);
-		rigi.AddForce (cam.transform.right.normalized * velLateral);
+		if (inputX == 0 && inputZ == 0) {
+			rigi.velocity = Vector3.zero;
+			return;
+		} else if (Mathf.Abs(inputX) > 0) {
+		
+			rigi.AddForce (cam.transform.right.normalized * velLateral);
+		}else if(Mathf.Abs(inputZ) > 0)
+		{
+			rigi.AddForce (cam.transform.forward.normalized * velForward);
+		}
 		//Debug.Log ("Update velX: "+velX+ " -- velZ: "+velZ);
 		//Debug.Log ("Update mousePos: "+mousePos.normalized.x);
 	}
