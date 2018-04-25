@@ -34,13 +34,15 @@ public class Player : MonoBehaviour {
 			rigi.velocity = Vector3.zero;
 			return;
 		} else if (Mathf.Abs(inputX) > 0) {
-		
-			rigi.AddForce (cam.transform.right.normalized * velLateral);
+			
+			rigi.AddForce (transform.TransformDirection(cam.transform.right) * velLateral);
 		}else if(Mathf.Abs(inputZ) > 0)
 		{
-			rigi.AddForce (cam.transform.forward.normalized * velForward);
+			Vector3 force = transform.TransformDirection(cam.transform.forward) * velForward;
+			Debug.Log ("Update Force: "+cam.transform.forward.normalized);
+			rigi.AddForce (force);
 		}
-		//Debug.Log ("Update velX: "+velX+ " -- velZ: "+velZ);
+
 		//Debug.Log ("Update mousePos: "+mousePos.normalized.x);
 	}
 }
