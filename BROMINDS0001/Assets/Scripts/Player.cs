@@ -26,23 +26,18 @@ public class Player : MonoBehaviour {
 		float velLateral = inputX * Time.deltaTime * 100000 * vel; 
 		float velForward = inputZ * Time.deltaTime * 100000 * vel; 
 
-		Vector3 mousePos = cam.ScreenToViewportPoint (Input.mousePosition);
-		//cam.transform.localEulerAngles = cam.transform.localEulerAngles + Vector3.up * mousePos.normalized.x * 0.05f;
-		float mouseX = Input.GetAxisRaw("Mouse X");
 
 		if (inputX == 0 && inputZ == 0) {
 			rigi.velocity = Vector3.zero;
 			return;
 		} else if (Mathf.Abs(inputX) > 0) {
-			Vector3 cameraRelative = cam.transform.InverseTransformPoint(cam.transform.right);
-			rigi.AddForce (cameraRelative * velLateral);
-			Debug.DrawLine (cam.transform.position, cameraRelative, Color.yellow);
+			//rigi.AddForce (transform.right * velLateral);
+			transform.eulerAngles += Vector3.up * Time.deltaTime * inputX * 50;
+
 		}else if(Mathf.Abs(inputZ) > 0)
-		{
-			Vector3 cameraRelative = cam.transform.InverseTransformPoint(cam.transform.forward);
-			Vector3 force = cameraRelative * velForward;
-			Debug.Log ("Update Force: "+cameraRelative);
-			Debug.DrawLine (cam.transform.position, cameraRelative, Color.yellow);
+		{						
+			Vector3 force = transform.forward * velForward * inputZ * Time.deltaTime * 100;
+			Debug.DrawLine (transform.position, transform.forward * 100, Color.yellow);
 			rigi.AddForce (force);
 		}
 
