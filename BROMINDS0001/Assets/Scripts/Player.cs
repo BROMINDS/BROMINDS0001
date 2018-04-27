@@ -6,16 +6,31 @@ public class Player : MonoBehaviour {
 
 	public Rigidbody rigi;
 	public Animator anim;
-	public float vel = 5;
+	public float velRotation = 5;
 	public Camera cam;
 	public bool canMove = true;
-
+	public Transform indicator;
+	public Transform container;
+	public Transform indicatorMov;
 	void Start () {
 		
 	}
-	
-	// Update is called once per frame
+
+	private bool canRote = false;
+
 	void Update () {
+		if (Input.GetKeyDown (KeyCode.L)) {
+			canRote = !canRote;
+		}
+
+		if (Input.GetKeyDown (KeyCode.F)) {
+			if (indicatorMov.parent == null) {
+				indicatorMov.parent = indicator.parent;
+				indicatorMov.position = indicator.position;
+			} else {
+				indicatorMov.parent = null;
+			}
+		}
 
 		if (!canMove)
 			return;
@@ -23,30 +38,21 @@ public class Player : MonoBehaviour {
 		float inputX = Input.GetAxisRaw("Horizontal");
 		float inputZ = Input.GetAxisRaw("Vertical");
 
-		float velLateral = inputX * Time.deltaTime * 100000 * vel; 
-		float velForward = inputZ * Time.deltaTime * 100000 * vel; 
+		float velLateral = inputX * Time.deltaTime * 100000 * velRotation; 
+		float velForward = inputZ * Time.deltaTime * 100000 * velRotation; 
 
-		Vector3 mousePos = cam.ScreenToViewportPoint (Input.mousePosition);
-		//cam.transform.localEulerAngles = cam.transform.localEulerAngles + Vector3.up * mousePos.normalized.x * 0.05f;
-		float mouseX = Input.GetAxisRaw("Mouse X");
 
 		if (inputX == 0 && inputZ == 0) {
 			rigi.velocity = Vector3.zero;
 			return;
-		} else if (Mathf.Abs(inputX) > 0) {
-			Vector3 cameraRelative = cam.transform.InverseTransformPoint(cam.transform.right);
-			rigi.AddForce (cameraRelative * velLateral);
-			Debug.DrawLine (cam.transform.position, cameraRelative, Color.yellow);
-		}else if(Mathf.Abs(inputZ) > 0)
-		{
-			Vector3 cameraRelative = cam.transform.InverseTransformPoint(cam.transform.forward);
-			Vector3 force = cameraRelative * velForward;
-			Debug.Log ("Update Force: "+cameraRelative);
-			Debug.DrawLine (cam.transform.position, cameraRelative, Color.yellow);
-			rigi.AddForce (force);
+		} else {
+
+			transform.eulerAngles += Vector3.up * Time.deltaTime * inputX * 10 * velRotation;	
+			Debug.Log ("Indicador: "+indicator.position+" -- Container: "+container.position);
+			rigi.AddForce (transform.forward * 100 * inputZ);
 		}
 
-		//Debug.Log ("Update mousePos: "+mousePos.normalized.x);
+		Debug.DrawLine (container.position, indicator.position, Color.yellow);
 	}
 
 }

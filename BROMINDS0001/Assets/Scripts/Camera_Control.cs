@@ -18,18 +18,27 @@ public class Camera_Control : MonoBehaviour {
 	public float sensVertical = 10.0f;
 
 	public float _rotationX = 0;
+	public float _rotationY = 0;
 
 	// Update is called once per frame
 	void Update () {
 		if (axes == RotationAxis.MouseX) {
-			transform.Rotate (0, Input.GetAxis ("Mouse X") * sensHorizontal, 0);
+			_rotationY += Input.GetAxis ("Mouse X") * sensHorizontal;
+
+			_rotationY = Mathf.Clamp (_rotationY, minimumVert, maximumVert); //Clamps the vertical angle within the min and max limits (45 degrees)
+			transform.localEulerAngles = new Vector3 (0, _rotationY, 0);
+
 		} else if (axes == RotationAxis.MouseY) {
 			_rotationX -= Input.GetAxis ("Mouse Y") * sensVertical;
 			_rotationX = Mathf.Clamp (_rotationX, minimumVert, maximumVert); //Clamps the vertical angle within the min and max limits (45 degrees)
 
 			float rotationY = transform.localEulerAngles.y;
-
+			rotationY = Mathf.Clamp (rotationY, minimumVert, maximumVert); //Clamps the vertical angle within the min and max limits (45 degrees)
 			transform.localEulerAngles = new Vector3 (_rotationX, rotationY, 0);
 		}
+
+		/*float rotationY = transform.localEulerAngles.y;
+		rotationY = Mathf.Clamp (_rotationX, minimumVert, maximumVert); 
+		transform.localEulerAngles = new Vector3 (0, rotationY, 0);*/
 	}
 }
